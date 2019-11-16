@@ -34,21 +34,19 @@ const addUserScheme = schema({
         timestamps: true
     })
 
-addUserScheme.methods.hasSamePassword = function(requestedPassword) {
+// addUserScheme.methods.hasSamePassword = function(requestedPassword) {
 
-    return bcrypt.compareSync(requestedPassword, this.password);
-}
+//     return bcrypt.compareSync(requestedPassword, this.password);
+// }
+// addUserScheme.pre('save', function(next) {
+//     const user = this;
 
-
-addUserScheme.pre('save', function(next) {
-    const user = this;
-
-    bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(user.password, salt, function(err, hash) {
-            user.password = hash;
-            next();
-        });
-    });
-});
+//     bcrypt.genSalt(10, function(err, salt) {
+//         bcrypt.hash(user.password, salt, function(err, hash) {
+//             user.password = hash;
+//             next();
+//         });
+//     });
+// });
 
 module.exports = mongoose.model("users", addUserScheme, "users")
