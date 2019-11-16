@@ -1,5 +1,8 @@
 const UserModel = require('../../models/user/user.model')
-
+const validator = require("email-validator");
+const phone = require('phone');
+const jwt = require('jsonwebtoken');
+const config = require('../../config/common.config');
 module.exports = {
     
     userlogin: async (req, res) => {
