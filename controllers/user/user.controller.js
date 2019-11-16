@@ -44,10 +44,10 @@ module.exports = {
         }
     },
     getDatabyId: async (req, res) => {
-        const { id } = req.body
+        const { user_id } = req.body
         let AllData = await userModel.findOne({
-            _id: id
-        })
+            _id: user_id
+        }).select('mobile name email sex lat lng profileImg')
         if (!AllData) {
             return res.send({
                 error: true,

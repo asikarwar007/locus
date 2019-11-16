@@ -20,6 +20,8 @@ admin.initializeApp({
 });
 
 var loginRouter = require('./routes/login');
+var userRouter = require('./routes/users');
+
 var app = express();
 app.use(bodyParser.json())
 app.use(cookieParser())
@@ -72,6 +74,7 @@ app.get('/uploads/:image', (req, res) => {
 })
 
 app.use('/auth', loginRouter);
+app.use('/user', userRouter);
 
 var port = process.env.PORT || 3090;
 
