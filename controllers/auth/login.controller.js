@@ -3,6 +3,8 @@ const validator = require("email-validator");
 const phone = require('phone');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/common.config');
+const helper = require('../../halpers/promotion.helper');
+
 module.exports = {
     
     userlogin: async (req, res) => {
@@ -233,43 +235,28 @@ module.exports = {
                             message: "something went wrong"
                         })
                     } else {
-                        let userwallet = new UserWalletModel({
-                            user_id: document._id,
-                            offer_amount: config.userRegisterAmount
-                        })
-                        userwallet.save((err, walletsave) => {
-                            let userTxn = new UserTxnModel({
-                                user_id: document._id,
-                                txn_amount: config.userRegisterAmount,
-                                remaining_amount: config.userRegisterAmount,
-                                txn_type: 'c',
-                                remarks: 'new User Point ' + config.userRegisterAmount
-                            })
-                            userTxn.save((err, txnSave) => {
-                                const token = jwt.sign({
-                                    user_id: document._id
-                                }, config.SECRET, {
-                                    expiresIn: config.TokenExpiresIn
+                        const token = jwt.sign({
+                            user_id: document._id
+                        }, config.SECRET, {
+                            expiresIn: config.TokenExpiresIn
+                        });
+                        let firetoken = [payload.firebase_token]
+                        let title = 'welcome '
+                        let body = 'welcome to houzzify'
+                        helper.sendPush(firetoken, title, body, (err, status) => {
+                            helper.sendSMS(payload.mobile, body, (err, status) => {
+                                return res.send({
+                                    error: false,
+                                    message: "Welcome " + document.name,
+                                    data: {
+                                        name: document.name,
+                                        mobile: document.mobile,
+                                        email: document.email,
+                                        profile_img: document.profile_img,
+                                        _id: document._id
+                                    },
+                                    token: token
                                 });
-                                let firetoken = [payload.firebase_token]
-                                let title = 'welcome '
-                                let body = 'welcome to houzzify'
-                                helper.sendPush(firetoken, title, body, (err, status) => {
-                                    helper.sendSMS(payload.mobile, body, (err, status) => {
-                                        return res.send({
-                                            error: false,
-                                            message: "Welcome " + document.name,
-                                            data: {
-                                                name: document.name,
-                                                mobile: document.mobile,
-                                                email: document.email,
-                                                profile_img: document.profile_img,
-                                                _id: document._id
-                                            },
-                                            token: token
-                                        });
-                                    })
-                                })
                             })
                         })
                         // const token = jwt.sign({
