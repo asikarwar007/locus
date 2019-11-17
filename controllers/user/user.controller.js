@@ -64,11 +64,49 @@ module.exports = {
     updateuser: async (req, res) => {
 
         const payload = req.body
+        let userDetails = await userModel.findOne({
+            _id: payload.user_id
+        })
+        if (!userDetails){
+            return res.send({
+                error: true,
+                message: "User Not Exists"
+            })
+        }
+        if (payload.mobile != userDetails.mobile) {
+            let sameDetails = await userModel.findOne({
+                mobile: payload.mobile,
+                status: true
+            })
+            if (sameDetails) {
+                return res.send({
+                    error: true,
+                    message: "Mobile No Already Exists"
+                })
+            }
+        }
+        if (payload.email != userDetails.email) {
+            let sameDetails = await userModel.findOne({
+                email: payload.email,
+                status: true
+            })
+            if (sameDetails) {
+                return res.send({
+                    error: true,
+                    message: "Email Already Exists"
+                })
+            }
+        }
         let AllData = await userModel.findOneAndUpdate({
-            _id: payload._id
+            _id: payload.user_id
         }, {
             $set:
-                payload
+            {
+                name: payload.name || userDetails.name,
+                mobile: payload.mobile || userDetails.mobile,
+                email: payload.email || userDetails.email,
+                sex: payload.sex || userDetails.sex
+            }
         })
         if (!AllData) {
             return res.send({

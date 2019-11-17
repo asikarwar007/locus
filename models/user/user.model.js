@@ -4,16 +4,19 @@ const bcrypt = require('bcrypt');
 const schema = mongoose.Schema
 const addUserScheme = schema({
     name: { type: String, default: '' },
-    mobile: { type: String, default: "0" },
+    contact: { type: String, default: "0" },
     email: { type: String, default: '' },
     password: { type: String, default: '' },
+    username: { type: String, default: '' },
     
     sex: { type: String, default: '' },
+    bday: { type: String, default: '' },
+    location: { type: String, default: '' },
     lat: { type: String, default: '' },
     lng: { type: String, default: '' },
 
     firebaseToken: { type: String, default: '' },
-    deviceType: { type: String, default: '' },
+    bio: { type: String, default: '' },
     
     socialId: { type: String, default: '' },
     profileImg: { type: String, default: '' },
@@ -35,7 +38,6 @@ const addUserScheme = schema({
     })
 
 // addUserScheme.methods.hasSamePassword = function(requestedPassword) {
-
 //     return bcrypt.compareSync(requestedPassword, this.password);
 // }
 // addUserScheme.pre('save', function(next) {
